@@ -64,5 +64,80 @@ test("There are at least 500 words on the page", () => {
   expect(getWords.length).toBeGreaterThanOrEqual(500);
 });
 
+var dice, rolls, total, x;
+
+function randomInt(n) {
+  // Return a random number from in [0, n[
+  return Math.floor(Math.random() * n);
+}
+
+function randomMember(arr) {
+  // Return a random member of the array
+  return arr[randomInt(arr.length)];
+}
+
+dice = [1, 2, 3, 4, 5, 6];
+rolls = [];
+total = 0;
+x = 0;
+
+document.getElementById('button_roll').addEventListener('click', (event) => {
+  let roll = randomMember(dice);
+  rolls.unshift(roll);
+
+  let new_li = document.createElement('li');
+  new_li.textContent = roll;
+  document.getElementById('list').appendChild(new_li);
+
+  total = rolls.reduce((a, b) => a + b, 0);
+  document.getElementById('total').textContent = total;
+  x = total;
+
+  let element_info = document.getElementById('info');
+  if (x == 11) {
+    element_info.textContent = 'You won!!!';
+  } else if (x > 11) {
+    element_info.textContent = 'Keep playing!';
+  }
+
+  let element_number = document.getElementById('number');
+  element_number.textContent = roll;
+
+});
+
+document.getElementById('button_restart').addEventListener('click', (event) => {
+  rolls = [];
+  total = 0;
+  x = 0;
+
+  document.getElementById('list').innerHTML = '';
+  document.getElementById('total').textContent = total;
+  document.getElementById('info').textContent = 'Keep playing!';
+  document.getElementById('number').textContent = 'Number!';
+});
+
+document.getElementById('button_remove').addEventListener('click', (event) => {
+  if (rolls.length > 0) {
+    let removedRoll = rolls.shift();
+    let listItems = document.querySelectorAll('#list li');
+    listItems[0].remove();
+
+    total = rolls.reduce((a, b) => a + b, 0);
+    document.getElementById('total').textContent = total;
+    x = total;
+
+    let element_number = document.getElementById('number');
+    element_number.textContent = removedRoll;
+
+    let element_info = document.getElementById('info');
+    if (x == 11) {
+      element_info.textContent = 'You won!!!';
+    } else if (x > 11) {
+      element_info.textContent = 'Keep playing!';
+    }
+  }
+});
+
+
 const console = document.getElementById("tests");
 prettify.toHTML(run(), console);
